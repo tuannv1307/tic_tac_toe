@@ -43,11 +43,12 @@ function App() {
     setBoardSize(tictactoe?.presentState?.boardSize);
   }, [tictactoe?.presentState?.boardSize]);
 
-  // useEffect(() => {
-  //   const winner: any = getWinnerRow(squares, parseInt(value), marksToWin);
-  //   !_.isEmpty(winner) && setWinnerRow(winner);
-  // }, [marksToWin, squares, value]);
-  console.log("abc", isWin(squares, boardSize?.y, boardSize?.x, isPlayer));
+  useEffect(() => {
+    const winner: any = isWin(squares, boardSize?.y, boardSize?.x, isPlayer);
+    console.log("abc");
+    !_.isEmpty(winner) && setWinnerRow(winner);
+  }, [squares]);
+
   let lengthWinnerRow = winnerRow?.length;
 
   const sign = squares[winnerRow[0]];

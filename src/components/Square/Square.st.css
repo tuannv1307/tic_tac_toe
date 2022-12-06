@@ -1,0 +1,25 @@
+.root {
+    color: #424242;
+    background: #bb4545;
+    border: 2px solid #f0f0f0;
+    /* float: left; */
+    font-size: 40px;
+    font-weight: bold;
+    line-height: 50px;
+    height: 50px;
+    margin-right: -1px;
+    margin-top: -1px;
+    padding: 0;
+    width: 50px;
+    outline: none;
+    display: flex;
+    width: 50px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0;
+}
+
+.root:focus {
+    outline: none;
+    background: #ddd;
+}

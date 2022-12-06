@@ -1,0 +1,52 @@
+.root {
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+
+}
+
+.chooseSize {
+  font-size: 30px;
+}
+
+.game {
+  -st-states: value(enum(10, 15, 20, 30, 40, 50));
+  padding: 30px 20px;
+}
+
+.game:value(50),
+.game:value(40) {
+  width: 100%;
+}
+
+
+
+.setting {
+  margin-bottom: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.boardSize {
+  font-size: 20px;
+  padding: 5px;
+  outline: none;
+  border: none;
+  width: 200px;
+  text-align: center;
+}
+
+.boardSize > option {
+  font-size: 30px;
+}
+
+.gameInfo {
+  font-size: 48px;
+  color: #424242;
+  margin: 20px 0;
+  text-align: center;
+}

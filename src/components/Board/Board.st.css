@@ -1,0 +1,42 @@
+.root {
+    -st-states: value(enum(10, 15, 20, 30, 40, 50));
+    display: grid;
+    grid-template-columns: repeat( 15, minmax(50px, 1fr) );
+}
+
+.root:value(10) {
+    grid-template-columns: repeat( 10, minmax(50px, 1fr) );
+}
+
+.root:value(15) {
+    grid-template-columns: repeat( 15, minmax(50px, 1fr) );
+}
+
+.root:value(20) {
+    grid-template-columns: repeat( 20, minmax(50px, 1fr) );
+}
+
+.root:value(30) {
+    grid-template-columns: repeat( 30, minmax(50px, 1fr) );
+}
+
+.root:value(40) {
+    grid-template-columns: repeat( 40, minmax(50px, 1fr) );
+}
+
+.root:value(50) {
+    grid-template-columns: repeat( 50, minmax(50px, 1fr) );
+}
+
+/* .boardRow {
+    display: flex;
+} */
+
+
+/* .count {
+    width: 20%;
+    height: 20%;
+    background-color: #d3d3d3;
+    float: left;
+    border: 1px solid white;
+} */

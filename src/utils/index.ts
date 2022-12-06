@@ -109,6 +109,7 @@
 export const isWin = (board, col, row, turn) => {
   const checkWinRow = (y, x, cell, arr = []) => {
     let IS = false;
+
     let count = 1;
     let arrWin = [cell];
     for (let i = y; i < arr?.length; i++) {

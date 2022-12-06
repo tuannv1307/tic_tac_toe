@@ -13,9 +13,9 @@ describe("Square.cy.tsx", () => {
     let value;
     cy.mount(
       <Provider store={store}>
+        {/* <Square value={value} />
         <Square value={value} />
-        <Square value={value} />
-        <Square value={value} />
+        <Square value={value} /> */}
       </Provider>
     );
   });

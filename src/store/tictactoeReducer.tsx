@@ -1,13 +1,13 @@
-import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, type PayloadAction, current } from "@reduxjs/toolkit";
+import _ from "lodash";
 
 export type TicTacToe = {
   prevState?: [];
-
   presentState?: {
-    squares?: number[] | string[];
+    squares?: { x: number; y: number; value: string | null }[];
     isStarted?: boolean;
     isPlayer?: string;
-    boardSize?: number;
+    boardSize?: { x?: number; y?: number };
     marksToWin?: number;
   };
 
@@ -15,9 +15,14 @@ export type TicTacToe = {
 };
 
 export type Actions = {
+  init: (state: TicTacToe) => void;
+  changeBoard: (
+    state: TicTacToe,
+    action: PayloadAction<{ boardSize?: { x?: number; y?: number } }>
+  ) => void;
   addSquares: (
     state: any,
-    action: PayloadAction<TicTacToeActionPayload>
+    action: PayloadAction<{ x: number; y: number; value: string | null }>
   ) => void;
   redo: (state: any) => void;
   undo: (state: any) => void;
@@ -31,8 +36,11 @@ const initialData: TicTacToe = {
   presentState: {
     squares: [],
     isStarted: false,
-    isPlayer: "O",
-    boardSize: 10,
+    isPlayer: "X",
+    boardSize: {
+      x: 15,
+      y: 15,
+    },
     marksToWin: 5,
   },
 
@@ -40,41 +48,120 @@ const initialData: TicTacToe = {
 };
 
 export type TicTacToeActionPayload = {
-  i: number;
-  name?: string;
-  isStart: boolean;
+  // i: number;
+  // name?: string;
+  // isStart: boolean;
+
+  x: number;
+  y: number;
+  value: "X" | "O";
 };
 
 const squareSlice = createSlice<TicTacToe, Actions>({
   name: "tictactoe",
   initialState: initialData as TicTacToe,
   reducers: {
-    addSquares: (state, action) => {
-      let { prevState, presentState, nextState } = state;
-      let { i, name, isStart } = action.payload;
-      const nextSquares = [...presentState.squares];
-      nextSquares[i] = name;
-      presentState.isStarted = isStart;
-      presentState.isPlayer = isStart === false ? "O" : "X";
-      presentState.squares = nextSquares;
+    init: (state) => {
+      const initBoard = [];
 
-      prevState.push(nextState.pop());
-      nextState.length = 0;
-      nextState.push(presentState);
+      if (
+        state.presentState &&
+        state.presentState.boardSize?.x &&
+        state.presentState.boardSize?.y
+      ) {
+        for (let i = 0; i < state.presentState?.boardSize?.y; i++) {
+          const temp = [];
+          for (let j = 0; j < state.presentState?.boardSize?.x; j++) {
+            temp.push({ x: i, y: j, value: null });
+          }
+          initBoard.push(temp);
+        }
+      }
+
+      const tempSquare: {
+        isStarted?: boolean;
+        isPlayer?: "O" | "X";
+        squares?: any;
+        boardSize?: {
+          x?: number;
+          y?: number;
+        };
+      } = {
+        isStarted: false,
+        isPlayer: "X",
+        squares: initBoard,
+        boardSize: {
+          x: 15,
+          y: 15,
+        },
+      };
+
+      state.presentState = tempSquare;
+    },
+
+    changeBoard: (state, action) => {
+      const initBoard = [];
+      const { x, y } = action.payload.boardSize || { x: 15, y: 15 };
+
+      if (x && y) {
+        for (let i = 0; i < y; i++) {
+          const temp = [];
+          for (let j = 0; j < x; j++) {
+            temp.push({ x: i, y: j, value: null });
+          }
+          initBoard.push(temp);
+        }
+      }
+
+      if (state.presentState?.boardSize && state.presentState.squares) {
+        console.log("a", action.payload.boardSize, initBoard);
+
+        state.presentState.boardSize = action.payload.boardSize;
+        state.presentState.squares = initBoard;
+      }
+    },
+
+    addSquares: (state, action) => {
+      const nextSquares = _.cloneDeep(state.presentState.squares);
+      nextSquares[action.payload.x][action.payload.y].value =
+        state.presentState.isStarted === true ? "O" : "X";
+
+      const tempSquare: {
+        isStarted?: boolean;
+        isPlayer?: "X" | "O";
+        squares?: string[];
+        boardSize?: {
+          x?: number;
+          y?: number;
+        };
+      } = {
+        isStarted: !state.presentState.isStarted,
+        isPlayer: !state.presentState.isStarted === true ? "O" : "X",
+        squares: nextSquares,
+        boardSize: {
+          x: 15,
+          y: 15,
+        },
+      };
+
+      state.prevState.push(_.cloneDeep(state.presentState));
+      state.presentState = _.cloneDeep(tempSquare);
     },
 
     redo: (state) => {
-      if (state.nextState?.length >= 1) {
+      console.log("State", current(state));
+
+      if (state.nextState?.length > 0) {
         let redoStack = state.nextState.pop();
+        state.prevState.push(_.cloneDeep(state.presentState));
         state.presentState = redoStack;
-        state.prevState.push(redoStack);
       }
     },
 
     undo: (state) => {
-      if (state.prevState?.length >= 2) {
+      if (state.prevState?.length > 0) {
         let undoStack = state.prevState.pop();
-        state.nextState.push(undoStack);
+        state.nextState.push(_.cloneDeep(state.presentState));
         state.presentState = undoStack;
       }
     },
@@ -89,6 +176,7 @@ const squareSlice = createSlice<TicTacToe, Actions>({
   extraReducers: {},
 });
 
-export const { addSquares, redo, undo, reStart } = squareSlice.actions;
+export const { init, changeBoard, addSquares, redo, undo, reStart } =
+  squareSlice.actions;
 
 export default squareSlice.reducer;

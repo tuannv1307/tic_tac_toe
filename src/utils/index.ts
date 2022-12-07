@@ -1,147 +1,222 @@
-// export const getSplitArr = (arr, gridCount = 10) => {
-//   return new Array(Math.ceil(arr.length / gridCount))
-//     .fill(null)
-//     .map((item, i) => arr.slice(gridCount * i, gridCount * i + gridCount));
-// };
+import store from "../store/store";
 
-// export const getWinnerRow = (board, boardSize, marksToWin) => {
-//   const fitsVertically = i => i + boardSize * (marksToWin - 1) < boardSize * boardSize;
-//   const fitsHorizontally = i => i % boardSize + marksToWin <= boardSize;
-//   const fitsBackHorizontally = i => i % boardSize - (marksToWin - 1) >= 0;
+import { TicTacToe } from "../store/tictactoeReducer";
 
-//   const getHorizontalRow = (i, cell, board = []) => {
-//       if (!fitsHorizontally(i)) return null;
+export const isWin = (
+  board: any,
+  currentSquare?: { x: number; y: number; value: string | null }
+) => {
+  // const { tictactoe } = store.getState();
+  // const x = tictactoe.presentState;
+  // const currentTurn = x!.isPlayer;
+  const arrRow = () => {
+    let row = [];
 
-//       let currWinnerRow = [i];
-//       let currRowCount = 1;
-
-//       for (let j = i + 1; currRowCount < marksToWin; j++) {
-//           if (board[j] === cell) {
-//               currWinnerRow.push(j);
-//               currRowCount++;
-//           } else {
-//               break;
-//           }
-//       }
-
-//       return currWinnerRow.length >= marksToWin ? currWinnerRow : null;
-//   };
-
-//   const getVerticalRow = (i, cell, board = []) => {
-//       if (!fitsVertically(i)) return null;
-
-//       let currWinnerRow = [i];
-//       let currRowCount = 1;
-
-//       for (let j = i + boardSize; currRowCount < marksToWin; j += boardSize) {
-//           if (board[j] === cell) {
-//               currWinnerRow.push(j);
-//               currRowCount++;
-//           } else {
-//               break;
-//           }
-//       }
-
-//       return currWinnerRow.length >= marksToWin ? currWinnerRow : null;
-//   };
-
-//   const getDiagonalLTRRow = (i, cell, board = []) => {
-//       if (!fitsHorizontally(i) || !fitsVertically(i)) return null;
-
-//       let currWinnerRow = [i];
-//       let currRowCount = 1;
-
-//       for (let j = i + boardSize + 1; currRowCount < marksToWin; j += boardSize + 1) {
-//           if (board[j] === cell) {
-//               currWinnerRow.push(j);
-//               currRowCount++;
-//           } else {
-//               break;
-//           }
-//       }
-
-//       return currWinnerRow.length >= marksToWin ? currWinnerRow : null;
-//   };
-
-//   const getDiagonalRTLRow = (i, cell, board = []) => {
-//       if (!fitsVertically(i) || !fitsBackHorizontally(i)) return null;
-
-//       let currWinnerRow = [i];
-//       let currRowCount = 1;
-
-//       for (let j = i + boardSize - 1; currRowCount < marksToWin; j += boardSize - 1) {
-//           if (board[j] === cell) {
-//               currWinnerRow.push(j);
-//               currRowCount++;
-//           } else {
-//               break;
-//           }
-//       }
-
-//       return currWinnerRow.length >= marksToWin ? currWinnerRow : null;
-//   };
-
-//   let emptyCellCount = board.length;
-
-//   for (let i = 0; i < board.length; i++) {
-//       const cell = board[i];
-
-//       if (cell) {
-//           emptyCellCount--;
-
-//           const horizontalRow = getHorizontalRow(i, cell, board);
-//           if (horizontalRow) return horizontalRow;
-
-//           const verticalRow = getVerticalRow(i, cell, board);
-//           if (verticalRow) return verticalRow;
-
-//           const diagonalLTRRow = getDiagonalLTRRow(i, cell, board);
-//           if (diagonalLTRRow) return diagonalLTRRow;
-
-//           const diagonalRTLRow = getDiagonalRTLRow(i, cell, board);
-//           if (diagonalRTLRow) return diagonalRTLRow;
-//       }
-//   }
-
-//   if (board.length && emptyCellCount <= 0) return [];
-// };
-
-export const isWin = (board, col, row, turn) => {
-  const checkWinRow = (y, x, cell, arr = []) => {
-    let IS = false;
-
-    let count = 1;
-    let arrWin = [cell];
-    for (let i = y; i < arr?.length; i++) {
-      for (let j = x; j < arr[i]?.length; j++) {
-        let p = board[i][j + 1];
-
-        if (
-          p?.value === cell?.value &&
-          // cell?.value === turn &&
-          p?.value !== null &&
-          cell?.value !== null
-        ) {
-          count++;
-          arrWin.push(p);
-        } else {
-          break;
-        }
-      }
+    const x = currentSquare?.x;
+    const y = currentSquare?.y;
+    if (currentSquare?.value) {
+      row = [currentSquare];
     }
-    if (count >= 5) {
-      console.log("aBC", arrWin);
-      return (IS = true);
+    // while(y)
+    // for (let i = 0; i < board.length; i++) {
+    for (let j = y; j < board[x]?.length; j++) {
+      //  for (let i = 0; board[x]?.length > i && i > 0; i++) {
+      const a = board[x][j + 1];
+
+      if (a?.value) {
+        row.push(a);
+      } else {
+        break;
+      }
+      // }
+
+      ///}
+    }
+    console.log("🚀 ~ file: index.ts:14 ~ arrRow ~ row", row);
+    return row;
+  };
+
+  // console.log("ABC", arrRow());
+  arrRow();
+  const m = [
+    {
+      value: "X",
+      x: 6,
+      y: 3,
+    },
+    {
+      value: "X",
+      x: 6,
+      y: 4,
+    },
+    {
+      value: "X",
+      x: 6,
+      y: 5,
+    },
+    {
+      value: "X",
+      x: 6,
+      y: 6,
+    },
+    // {
+    //   value: "X",
+    //   x: 6,
+    //   y: 7,
+    // },
+    {
+      value: "X",
+      x: 6,
+      y: 8,
+    },
+  ];
+
+  const abc = (m) => {
+    if ("tru") {
+      //
+      return true;
+    } else {
+      //
     }
   };
 
-  for (let i = 0; i < board.length; i++) {
-    for (let j = 0; j < board[i].length; j++) {
-      const cell = board[i][j];
-      if (cell) {
-        const horizontalRow = checkWinRow(i, j, cell, board);
-        if (horizontalRow) return horizontalRow;
-      }
-    }
-  }
+  // const checkWinRow = (
+  //   y: number,
+  //   x: number,
+  //   cell: { x: number; y: number; value: string | null }
+  // ) => {
+  //   let count = 1;
+  //   let arrWin = [cell];
+  //   for (let j = x + 1; j < board[y]?.length; j++) {
+  //     let p = board[y][j];
+  //     if (
+  //       p?.value === cell?.value &&
+  //       p?.value !== null &&
+  //       cell?.value !== null
+  //     ) {
+  //       count++;
+  //       arrWin.push(p);
+  //     } else {
+  //       break;
+  //     }
+  //   }
+  //   if (count >= 5) {
+  //     return arrWin;
+  //   }
+  // };
+  // const checkWinCol = (
+  //   y: number,
+  //   x: number,
+  //   cell: { x: number; y: number; value: string | null }
+  // ) => {
+  //   let count = 1;
+  //   let arrWin = [cell];
+  //   for (let i = y + 1; i < board?.length; i++) {
+  //     //for (let j = x; j < board[i].length; j++) {
+  //     let p = board[i][x];
+
+  //     if (
+  //       p?.value === cell?.value &&
+  //       p?.value !== null &&
+  //       cell?.value !== null
+  //     ) {
+  //       arrWin.push(p);
+  //       count++;
+  //     } else {
+  //       break;
+  //     }
+  //     // }
+  //   }
+
+  //   if (count >= 5) {
+  //     return arrWin;
+  //   }
+  // };
+
+  // const checkWinDiagRight = (
+  //   y: number,
+  //   x: number,
+  //   cell: { x: number; y: number; value: string | null }
+  // ) => {
+  //   console.log("🚀 ~ file: index.ts:66 ~ isWin ~ x", x);
+  //   console.log("🚀 ~ file: index.ts:66 ~ isWin ~ y", y);
+  //   let count = 1;
+  //   let arrWin = [cell];
+
+  //   for (let i = y + 1; i < board?.length; i++) {
+  //     for (let j = x + 1; j < board[i]?.length; j++) {
+  //       let p = board[i][j];
+  //       // console.log("🚀 ~ file: index.ts:76 ~ isWin ~ p", p);
+  //       // const leftUp = board[x - 1][y - 1];
+  //       // console.log("🚀 ~ file: index.ts:70 ~ isWin ~ leftUp", leftUp);
+  //       if (
+  //         p?.value === cell?.value &&
+  //         p?.value !== null &&
+  //         cell?.value !== null
+  //       ) {
+  //         arrWin.push(p);
+  //         count++;
+  //       } else break;
+  //     }
+  //   }
+
+  //   if (count >= 5) {
+  //     return arrWin;
+  //   }
+  // };
+
+  // const checkWinDiagLeft = (
+  //   y: number,
+  //   x: number,
+  //   cell: { x: number; y: number; value: string | null }
+  // ) => {
+  //   let count = 1;
+  //   let arrWin = [cell];
+  //   for (let i = y - 1; i < board?.length && i > -1; i--) {
+  //     for (let j = x + 1; j < board[i]?.length; j++) {
+  //       let p = board[i][j];
+  //       if (
+  //         p?.value === cell?.value &&
+  //         p?.value !== null &&
+  //         cell?.value !== null
+  //       ) {
+  //         count++;
+  //         arrWin.push(p);
+  //       } else {
+  //       }
+  //     }
+  //   }
+
+  //   if (count >= 5) {
+  //     return arrWin;
+  //   }
+  // };
+
+  // for (let i = 0; i < board.length; i++) {
+  //   for (let j = 0; j < board[i].length; j++) {
+  //     const cell = board[i][j];
+
+  //     if (cell.value !== null) {
+  //       // console.log(cell);
+  //       const winRow = checkWinRow(i, j, cell);
+  //       if (winRow) {
+  //         return winRow;
+  //       }
+
+  //       const winCol = checkWinCol(i, j, cell);
+  //       if (winCol) {
+  //         return winCol;
+  //       }
+
+  //       const winDiagRight = checkWinDiagRight(i, j, cell);
+  //       if (winDiagRight) return winDiagRight;
+
+  //       const winDiagLeft = checkWinDiagLeft(i, j, cell);
+  //       if (winDiagLeft) return winDiagLeft;
+  //     }
+  //   }
+  // }
+  // if (board.length === 0) {
+  //   return [];
+  // }
 };

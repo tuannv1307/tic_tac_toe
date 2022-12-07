@@ -22,7 +22,7 @@ const Action = () => {
           break;
         default:
           dispatch(init());
-
+          dispatch(reStart());
           break;
       }
     } catch (error) {

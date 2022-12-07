@@ -16,7 +16,6 @@ export type BoardProps = {
 };
 
 const Board = ({ value, lengthWinnerRow }: any) => {
-  const disabled = lengthWinnerRow === 5 ? true : false;
   const presentState: TicTacToe["presentState"] = useSelector(
     (state: { tictactoe: TicTacToe }) => state.tictactoe.presentState
   );

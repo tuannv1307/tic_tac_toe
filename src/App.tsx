@@ -10,26 +10,25 @@ import {
   undo,
   init,
   changeBoard,
+  winnerRow,
 } from "./store/tictactoeReducer";
 import Board from "./components/Board";
 import ActionBtn from "./components/ActionBtn";
 import { st, classes } from "./App.st.css";
 import "./globals.st.css";
-import { getWinnerRow, isWin } from "./utils";
+import { isWin } from "./utils";
 
 function App() {
   const tictactoe: TicTacToe = useSelector(
     (state: { tictactoe: TicTacToe }) => state.tictactoe
   );
 
-  let { squares, marksToWin, isPlayer, isStarted }: any =
+  let { squares, isPlayer, isStarted, playerToWin, currentSquare }: any =
     tictactoe?.presentState;
 
   const [boardSize, setBoardSize] = useState<
     { x?: number; y?: number } | undefined
   >(tictactoe?.presentState?.boardSize);
-
-  const [winnerRow, setWinnerRow] = useState<any[]>([]);
 
   const [currentPlayer, setCurrentPlayer] = useState<null | string>(null);
 
@@ -44,29 +43,27 @@ function App() {
   }, [tictactoe?.presentState?.boardSize]);
 
   useEffect(() => {
-    const winner: any = isWin(squares, boardSize?.y, boardSize?.x, isPlayer);
-    console.log("abc");
-    !_.isEmpty(winner) && setWinnerRow(winner);
-  }, [squares]);
+    const checkWin = isWin(squares, currentSquare);
 
-  let lengthWinnerRow = winnerRow?.length;
+    // !_.isUndefined(checkWin) && dispatch(winnerRow({ checkWin }));
+  }, [squares, currentSquare]);
 
-  const sign = squares[winnerRow[0]];
+  let lengthWinnerRow = playerToWin?.length;
 
   useEffect(() => {
-    if (winnerRow) {
-      if (lengthWinnerRow) {
-        if (sign !== null) {
-          setCurrentPlayer(`Winner: ${sign}`);
-        }
+    if (playerToWin) {
+      let sign = playerToWin[1]?.value;
+
+      if (sign) {
+        setCurrentPlayer(`Winner: ${sign}`);
       } else {
         setCurrentPlayer("Draw");
       }
     }
-  }, [winnerRow]);
+  }, [winnerRow, lengthWinnerRow]);
 
   function getStatus() {
-    if (lengthWinnerRow >= marksToWin - 1) {
+    if (lengthWinnerRow >= 5) {
       return currentPlayer;
     } else {
       return "Next player: " + isPlayer;
@@ -84,9 +81,8 @@ function App() {
           break;
         default:
           dispatch(reStart());
-          setWinnerRow([]);
           if (!_.isEmpty(squares)) {
-            sign === "O" ? (isStarted = true) : (isStarted = false);
+            // sign === "O" ? (isStarted = true) : (isStarted = false);
           }
 
           break;
@@ -127,7 +123,7 @@ function App() {
           />
         </div>
         <div className={st(classes.gameInfo)}>{getStatus()}</div>
-        <Board lengthWinnerRow={lengthWinnerRow} />
+        <Board />
         <ActionBtn />
       </div>
     </div>

@@ -1,14 +1,16 @@
 import { createSlice, type PayloadAction, current } from "@reduxjs/toolkit";
 import _ from "lodash";
+import { isWin } from "../utils";
 
 export type TicTacToe = {
   prevState?: [];
   presentState?: {
     squares?: { x: number; y: number; value: string | null }[];
+    currentSquare?: { x: number; y: number; value: string | null };
     isStarted?: boolean;
     isPlayer?: string;
     boardSize?: { x?: number; y?: number };
-    marksToWin?: number;
+    playerToWin: [];
   };
 
   nextState?: [];
@@ -26,7 +28,7 @@ export type Actions = {
   ) => void;
   redo: (state: any) => void;
   undo: (state: any) => void;
-
+  winnerRow: (state: any, action: any) => void;
   reStart: (state: any) => void;
 };
 
@@ -35,13 +37,14 @@ const initialData: TicTacToe = {
 
   presentState: {
     squares: [],
+    currentSquare: undefined,
     isStarted: false,
     isPlayer: "X",
     boardSize: {
       x: 15,
       y: 15,
     },
-    marksToWin: 5,
+    playerToWin: [],
   },
 
   nextState: [],
@@ -86,6 +89,7 @@ const squareSlice = createSlice<TicTacToe, Actions>({
           x?: number;
           y?: number;
         };
+        playerToWin: [];
       } = {
         isStarted: false,
         isPlayer: "X",
@@ -94,18 +98,19 @@ const squareSlice = createSlice<TicTacToe, Actions>({
           x: 15,
           y: 15,
         },
+        playerToWin: [],
       };
 
       state.presentState = tempSquare;
     },
 
     changeBoard: (state, action) => {
-      const initBoard = [];
+      const initBoard: { x: number; y: number; value: string | null }[] = [];
       const { x, y } = action.payload.boardSize || { x: 15, y: 15 };
 
       if (x && y) {
         for (let i = 0; i < y; i++) {
-          const temp = [];
+          const temp: { x: number; y: number; value: string | null }[] = [];
           for (let j = 0; j < x; j++) {
             temp.push({ x: i, y: j, value: null });
           }
@@ -114,8 +119,6 @@ const squareSlice = createSlice<TicTacToe, Actions>({
       }
 
       if (state.presentState?.boardSize && state.presentState.squares) {
-        console.log("a", action.payload.boardSize, initBoard);
-
         state.presentState.boardSize = action.payload.boardSize;
         state.presentState.squares = initBoard;
       }
@@ -130,6 +133,7 @@ const squareSlice = createSlice<TicTacToe, Actions>({
         isStarted?: boolean;
         isPlayer?: "X" | "O";
         squares?: string[];
+        currentSquare?: { x: number; y: number; value: string | null };
         boardSize?: {
           x?: number;
           y?: number;
@@ -138,6 +142,10 @@ const squareSlice = createSlice<TicTacToe, Actions>({
         isStarted: !state.presentState.isStarted,
         isPlayer: !state.presentState.isStarted === true ? "O" : "X",
         squares: nextSquares,
+        currentSquare: {
+          ...action.payload,
+          value: state.presentState.isStarted === true ? "O" : "X",
+        },
         boardSize: {
           x: 15,
           y: 15,
@@ -146,11 +154,10 @@ const squareSlice = createSlice<TicTacToe, Actions>({
 
       state.prevState.push(_.cloneDeep(state.presentState));
       state.presentState = _.cloneDeep(tempSquare);
+      // isWin(nextSquares);
     },
 
     redo: (state) => {
-      console.log("State", current(state));
-
       if (state.nextState?.length > 0) {
         let redoStack = state.nextState.pop();
         state.prevState.push(_.cloneDeep(state.presentState));
@@ -165,18 +172,26 @@ const squareSlice = createSlice<TicTacToe, Actions>({
         state.presentState = undoStack;
       }
     },
-
+    winnerRow: (state, action) => {
+      let { presentState } = state;
+      const { checkWin } = action.payload;
+      presentState.playerToWin = checkWin;
+      presentState = _.cloneDeep(presentState);
+    },
     reStart: (state) => {
       let { presentState } = state;
-      presentState.squares = [];
+
       state.prevState = [];
       state.nextState = [];
+
+      presentState.playerToWin = [];
+      presentState = _.cloneDeep(presentState);
     },
   },
   extraReducers: {},
 });
 
-export const { init, changeBoard, addSquares, redo, undo, reStart } =
+export const { init, changeBoard, addSquares, redo, undo, reStart, winnerRow } =
   squareSlice.actions;
 
 export default squareSlice.reducer;

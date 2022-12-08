@@ -16,9 +16,7 @@ const Square = ({ square }: SquareProps) => {
     (state: { tictactoe: TicTacToe }) => state.tictactoe.presentState
   );
   const disabled =
-    presentState.playerToWin?.length && presentState.playerToWin?.length >= 5
-      ? false
-      : true;
+    presentState?.playerToWin && presentState.playerToWin ? false : true;
 
   const handleOnClick = () => {
     if (square && _.isNull(square?.value) && disabled) {

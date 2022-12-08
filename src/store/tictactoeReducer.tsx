@@ -1,16 +1,22 @@
-import { createSlice, type PayloadAction, current } from "@reduxjs/toolkit";
+import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import _ from "lodash";
-import { isWin } from "../utils";
 
 export type TicTacToe = {
   prevState?: [];
   presentState?: {
-    squares?: { x: number; y: number; value: string | null }[];
+    squares?: {
+      x: number;
+      y: number;
+      value: string | null;
+      // color?: {
+      //   backgroundWin: string;
+      // };
+    }[];
     currentSquare?: { x: number; y: number; value: string | null };
     isStarted?: boolean;
     isPlayer?: string;
     boardSize?: { x?: number; y?: number };
-    playerToWin: [];
+    playerToWin: boolean;
   };
 
   nextState?: [];
@@ -28,7 +34,7 @@ export type Actions = {
   ) => void;
   redo: (state: any) => void;
   undo: (state: any) => void;
-  winnerRow: (state: any, action: any) => void;
+  winner: (state: any, action: any) => void;
   reStart: (state: any) => void;
 };
 
@@ -44,17 +50,13 @@ const initialData: TicTacToe = {
       x: 15,
       y: 15,
     },
-    playerToWin: [],
+    playerToWin: false,
   },
 
   nextState: [],
 };
 
 export type TicTacToeActionPayload = {
-  // i: number;
-  // name?: string;
-  // isStart: boolean;
-
   x: number;
   y: number;
   value: "X" | "O";
@@ -75,7 +77,12 @@ const squareSlice = createSlice<TicTacToe, Actions>({
         for (let i = 0; i < state.presentState?.boardSize?.y; i++) {
           const temp = [];
           for (let j = 0; j < state.presentState?.boardSize?.x; j++) {
-            temp.push({ x: i, y: j, value: null });
+            temp.push({
+              x: i,
+              y: j,
+              value: null,
+              // color: { backgroundWin: "" },
+            });
           }
           initBoard.push(temp);
         }
@@ -85,11 +92,19 @@ const squareSlice = createSlice<TicTacToe, Actions>({
         isStarted?: boolean;
         isPlayer?: "O" | "X";
         squares?: any;
+        //  {
+        //   x: number;
+        //   y: number;
+        //   value: string | null;
+        //   // color: {
+        //   //   backgroundWin: string | "";
+        //   // };
+        // }[];
         boardSize?: {
           x?: number;
           y?: number;
         };
-        playerToWin: [];
+        playerToWin: boolean;
       } = {
         isStarted: false,
         isPlayer: "X",
@@ -98,7 +113,7 @@ const squareSlice = createSlice<TicTacToe, Actions>({
           x: 15,
           y: 15,
         },
-        playerToWin: [],
+        playerToWin: false,
       };
 
       state.presentState = tempSquare;
@@ -110,9 +125,14 @@ const squareSlice = createSlice<TicTacToe, Actions>({
 
       if (x && y) {
         for (let i = 0; i < y; i++) {
-          const temp: { x: number; y: number; value: string | null }[] = [];
+          const temp: any = [];
           for (let j = 0; j < x; j++) {
-            temp.push({ x: i, y: j, value: null });
+            temp.push({
+              x: i,
+              y: j,
+              value: null,
+              // color: { backgroundWin: "" },
+            });
           }
           initBoard.push(temp);
         }
@@ -172,7 +192,7 @@ const squareSlice = createSlice<TicTacToe, Actions>({
         state.presentState = undoStack;
       }
     },
-    winnerRow: (state, action) => {
+    winner: (state, action) => {
       let { presentState } = state;
       const { checkWin } = action.payload;
       presentState.playerToWin = checkWin;
@@ -184,14 +204,14 @@ const squareSlice = createSlice<TicTacToe, Actions>({
       state.prevState = [];
       state.nextState = [];
 
-      presentState.playerToWin = [];
+      presentState.playerToWin = false;
       presentState = _.cloneDeep(presentState);
     },
   },
   extraReducers: {},
 });
 
-export const { init, changeBoard, addSquares, redo, undo, reStart, winnerRow } =
+export const { init, changeBoard, addSquares, redo, undo, reStart, winner } =
   squareSlice.actions;
 
 export default squareSlice.reducer;

@@ -10,5 +10,7 @@ describe("Todos.cy.tsx", () => {
         <Board />
       </Provider>
     );
+
+    cy.get('[data-hook="board"]');
   });
 });

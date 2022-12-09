@@ -1,9 +1,9 @@
 import _ from "lodash";
 
 const checkBlock = (
-  board: any,
-  arrWin: any,
-  currentSquare: any,
+  board: { x: number; y: number; value: string | null }[][],
+  arrWin: { x: number; y: number; value: string | null }[],
+  currentSquare?: { x: number; y: number; value: string | null },
   type?: "row" | "col" | "diagonRight" | "diagonLeft"
 ) => {
   if (type === "row") {
@@ -15,8 +15,6 @@ const checkBlock = (
           board[arrWin[0].x][arrWin[0].y - 1].value === currentSquare?.value) &&
         (board[arrWin[0].x][arrWin[0].y + 1].value === null ||
           board[arrWin[0].x][arrWin[0].y + 1].value === currentSquare?.value)
-        // &&
-        // board[row[0].x][row[0].y - 1].value === currentSquare?.value
       )
         return true;
       return false;
@@ -29,8 +27,6 @@ const checkBlock = (
         (!_.isUndefined(board[arrWin[0].x][arrWin[0].y + 1]) &&
           (board[arrWin[0].x][arrWin[0].y + 1].value === null ||
             board[arrWin[0].x][arrWin[0].y + 1].value === currentSquare?.value))
-        // &&
-        // board[row[0].x][row[0].y - 1].value === currentSquare?.value
       )
         return true;
       return false;
@@ -38,29 +34,31 @@ const checkBlock = (
   } else if (type === "col") {
     if (_.size(arrWin) === 4) {
       if (
+        !_.isUndefined(board[arrWin[0].x - 1]) &&
+        !_.isUndefined(board[arrWin[0].x + 1]) &&
         !_.isUndefined(board[arrWin[0].x - 1][arrWin[0].y]) &&
         !_.isUndefined(board[arrWin[0].x + 1][arrWin[0].y]) &&
         (board[arrWin[0].x - 1][arrWin[0].y].value === null ||
           board[arrWin[0].x - 1][arrWin[0].y].value === currentSquare?.value) &&
         (board[arrWin[0].x + 1][arrWin[0].y].value === null ||
           board[arrWin[0].x + 1][arrWin[0].y].value === currentSquare?.value)
-        // &&
-        // board[row[0].x][row[0].y - 1].value === currentSquare?.value
       )
         return true;
 
       return false;
     } else if (_.size(arrWin) === 5) {
       if (
-        (!_.isUndefined(board[arrWin[0].x - 1][arrWin[0].y]) &&
+        (!_.isUndefined(board[arrWin[0].x - 1]) &&
+          !_.isUndefined(board[arrWin[0].x + 1]) &&
+          !_.isUndefined(board[arrWin[0].x - 1][arrWin[0].y]) &&
           (board[arrWin[0].x - 1][arrWin[0].y].value === null ||
             board[arrWin[0].x - 1][arrWin[0].y].value ===
               currentSquare?.value)) ||
-        (!_.isUndefined(board[arrWin[0].x + 1][arrWin[0].y]) &&
+        (!_.isUndefined(board[arrWin[0].x - 1]) &&
+          !_.isUndefined(board[arrWin[0].x + 1]) &&
+          !_.isUndefined(board[arrWin[0].x + 1][arrWin[0].y]) &&
           (board[arrWin[0].x + 1][arrWin[0].y].value === null ||
             board[arrWin[0].x + 1][arrWin[0].y].value === currentSquare?.value))
-        // &&
-        // board[row[0].x][row[0].y - 1].value === currentSquare?.value
       )
         return true;
 
@@ -69,6 +67,8 @@ const checkBlock = (
   } else if (type === "diagonRight") {
     if (_.size(arrWin) === 4) {
       if (
+        !_.isUndefined(board[arrWin[0].x - 1]) &&
+        !_.isUndefined(board[arrWin[0].x + 1]) &&
         !_.isUndefined(board[arrWin[0].x - 1][arrWin[0].y - 1]) &&
         !_.isUndefined(board[arrWin[0].x + 1][arrWin[0].y + 1]) &&
         (board[arrWin[0].x - 1][arrWin[0].y - 1].value === null ||
@@ -77,24 +77,24 @@ const checkBlock = (
         (board[arrWin[0].x + 1][arrWin[0].y + 1].value === null ||
           board[arrWin[0].x + 1][arrWin[0].y + 1].value ===
             currentSquare?.value)
-        // &&
-        // board[row[0].x][row[0].y - 1].value === currentSquare?.value
       )
         return true;
 
       return false;
     } else if (_.size(arrWin) === 5) {
       if (
-        (!_.isUndefined(board[arrWin[0].x - 1][arrWin[0].y - 1]) &&
+        (!_.isUndefined(board[arrWin[0].x - 1]) &&
+          !_.isUndefined(board[arrWin[0].x + 1]) &&
+          !_.isUndefined(board[arrWin[0].x - 1][arrWin[0].y - 1]) &&
           (board[arrWin[0].x - 1][arrWin[0].y - 1].value === null ||
             board[arrWin[0].x - 1][arrWin[0].y - 1].value ===
               currentSquare?.value)) ||
-        (!_.isUndefined(board[arrWin[0].x + 1][arrWin[0].y + 1]) &&
+        (!_.isUndefined(board[arrWin[0].x - 1]) &&
+          !_.isUndefined(board[arrWin[0].x + 1]) &&
+          !_.isUndefined(board[arrWin[0].x + 1][arrWin[0].y + 1]) &&
           (board[arrWin[0].x + 1][arrWin[0].y + 1].value === null ||
             board[arrWin[0].x + 1][arrWin[0].y + 1].value ===
               currentSquare?.value))
-        // &&
-        // board[row[0].x][row[0].y - 1].value === currentSquare?.value
       )
         return true;
 
@@ -103,6 +103,8 @@ const checkBlock = (
   } else if (type === "diagonLeft") {
     if (_.size(arrWin) === 4) {
       if (
+        !_.isUndefined(board[arrWin[0].x - 1]) &&
+        !_.isUndefined(board[arrWin[0].x + 1]) &&
         !_.isUndefined(board[arrWin[0].x + 1][arrWin[0].y - 1]) &&
         !_.isUndefined(board[arrWin[0].x - 1][arrWin[0].y + 1]) &&
         (board[arrWin[0].x + 1][arrWin[0].y - 1].value === null ||
@@ -117,11 +119,15 @@ const checkBlock = (
       return false;
     } else if (_.size(arrWin) === 5) {
       if (
-        (!_.isUndefined(board[arrWin[0].x + 1][arrWin[0].y - 1]) &&
+        (!_.isUndefined(board[arrWin[0].x - 1]) &&
+          !_.isUndefined(board[arrWin[0].x + 1]) &&
+          !_.isUndefined(board[arrWin[0].x + 1][arrWin[0].y - 1]) &&
           (board[arrWin[0].x + 1][arrWin[0].y - 1].value === null ||
             board[arrWin[0].x + 1][arrWin[0].y - 1].value ===
               currentSquare?.value)) ||
-        (!_.isUndefined(board[arrWin[0].x - 1][arrWin[0].y + 1]) &&
+        (!_.isUndefined(board[arrWin[0].x - 1]) &&
+          !_.isUndefined(board[arrWin[0].x + 1]) &&
+          !_.isUndefined(board[arrWin[0].x - 1][arrWin[0].y + 1]) &&
           (board[arrWin[0].x - 1][arrWin[0].y + 1].value === null ||
             board[arrWin[0].x - 1][arrWin[0].y + 1].value ===
               currentSquare?.value))
@@ -163,102 +169,14 @@ export const isWin = (
       let col: { x: number; y: number; value: string | null }[] = [];
       const x = currentSquare?.x;
       let y = currentSquare?.y;
-
-      // let i = -4;
-      // while (i < 5) {
-      //   const aa = board[x + i][y];
-
-      //   if (
-      //     _.isUndefined(aa)
-      //     //  &&
-      //     // aa?.value === currentSquare.value
-      //   ) {
-      //     col.push(aa);
-      //   }
-      //   console.log(col);
-      //   i++;
-      // }
-      if (x < 11 && x >= 4) {
-        for (let i = -4; i < 5; i++) {
-          if (
-            !_.isUndefined(board[x + i][y]) &&
-            board[x + i][y]?.value === currentSquare.value
-          ) {
-            col.push(board[x + i][y]);
-          }
-        }
-      } else if (x === 3) {
-        for (let i = -3; i < 5; i++) {
-          if (
-            !_.isUndefined(board[x + i][y]) &&
-            board[x + i][y]?.value === currentSquare.value
-          ) {
-            col.push(board[x + i][y]);
-          }
-        }
-      } else if (x === 2) {
-        for (let i = -2; i < 5; i++) {
-          if (
-            !_.isUndefined(board[x + i][y]) &&
-            board[x + i][y]?.value === currentSquare.value
-          ) {
-            col.push(board[x + i][y]);
-            console.log(col);
-          }
-        }
-      } else if (x === 1) {
-        for (let i = -1; i < 5; i++) {
-          if (
-            !_.isUndefined(board[x + i][y]) &&
-            board[x + i][y]?.value === currentSquare.value
-          ) {
-            col.push(board[x + i][y]);
-          }
-        }
-      } else if (x === 0) {
-        for (let i = 0; i < 5; i++) {
-          if (
-            !_.isUndefined(board[x + i][y]) &&
-            board[x + i][y]?.value === currentSquare.value
-          ) {
-            col.push(board[x + i][y]);
-          }
-        }
-      } else if (x === 11) {
-        for (let i = -4; i < 4; i++) {
-          if (
-            !_.isUndefined(board[x + i][y]) &&
-            board[x + i][y]?.value === currentSquare.value
-          ) {
-            col.push(board[x + i][y]);
-          }
-        }
-      } else if (x === 12) {
-        for (let i = -4; i < 3; i++) {
-          if (
-            !_.isUndefined(board[x + i][y]) &&
-            board[x + i][y]?.value === currentSquare.value
-          ) {
-            col.push(board[x + i][y]);
-          }
-        }
-      } else if (x === 13) {
-        for (let i = -4; i < 2; i++) {
-          if (
-            !_.isUndefined(board[x + i][y]) &&
-            board[x + i][y]?.value === currentSquare.value
-          ) {
-            col.push(board[x + i][y]);
-          }
-        }
-      } else if (x === 14) {
-        for (let i = -4; i < 1; i++) {
-          if (
-            !_.isUndefined(board[x + i][y]) &&
-            board[x + i][y]?.value === currentSquare.value
-          ) {
-            col.push(board[x + i][y]);
-          }
+      for (let i = -4; i < 5; i++) {
+        if (
+          board &&
+          !_.isUndefined(board[x + i]) &&
+          !_.isUndefined(board[x + i][y]) &&
+          board[x + i][y]?.value === currentSquare.value
+        ) {
+          col.push(board[x + i][y]);
         }
       }
 
@@ -275,13 +193,14 @@ export const isWin = (
       let y = currentSquare?.y;
       for (let i = -4; i < 5; i++) {
         if (
+          board &&
+          !_.isUndefined(board[x + i]) &&
           !_.isUndefined(board[x + i][y + i]) &&
           board[x + i][y + i].value === currentSquare.value
         )
           diagonR.push(board[x + i][y + i]);
       }
       return diagonR;
-      0;
     }
     return [];
   };
@@ -294,10 +213,13 @@ export const isWin = (
       let y = currentSquare?.y;
       for (let i = -4; i < 5; i++) {
         if (
+          board &&
+          !_.isUndefined(board[x - i]) &&
           !_.isUndefined(board[x - i][y + i]) &&
           board[x - i][y + i].value === currentSquare.value
-        )
+        ) {
           diagonL.push(board[x - i][y + i]);
+        }
       }
 
       return diagonL;
@@ -305,28 +227,25 @@ export const isWin = (
     return [];
   };
 
+  let isCheckWiner;
   const checkWin = (
     array: { x: number; y: number; value: string | null }[],
     type?: "row" | "col" | "diagonRight" | "diagonLeft"
   ) => {
+    isCheckWiner = checkWiner(board, array, currentSquare, type);
     if (type === "row") {
-      const isCheckWiner = checkWiner(board, array, currentSquare, type);
-
-      if (isCheckWiner) return true;
+      if (isCheckWiner) {
+        return isCheckWiner;
+      }
       return false;
     } else if (type === "col") {
-      const isCheckWiner = checkWiner(board, array, currentSquare, type);
-
-      if (isCheckWiner) return true;
+      if (isCheckWiner) return isCheckWiner;
       return false;
     } else if (type === "diagonRight") {
-      const isCheckWiner = checkWiner(board, array, currentSquare, type);
-
-      if (isCheckWiner) return true;
+      if (isCheckWiner) return isCheckWiner;
       return false;
     } else if (type === "diagonLeft") {
-      const isCheckWiner = checkWiner(board, array, currentSquare, type);
-      if (isCheckWiner) return true;
+      if (isCheckWiner) return isCheckWiner;
       return false;
     }
 
@@ -339,16 +258,16 @@ export const isWin = (
     checkWin(arrDiagonRight(), "diagonRight") ||
     checkWin(arrDiagonLeft(), "diagonLeft")
   ) {
-    return true;
-  } else {
-    return false;
+    return isCheckWiner;
   }
+
+  return false;
 };
 
-const checkWiner = (
-  board: any,
-  array: any,
-  currentSquare: any,
+export const checkWiner = (
+  board: [],
+  array: { x: number; y: number; value: string | null }[],
+  currentSquare?: { x: number; y: number; value: string | null },
   type?: "row" | "col" | "diagonRight" | "diagonLeft"
 ) => {
   let arrWin: { x: number; y: number; value: string | null }[] = [];
@@ -374,8 +293,11 @@ const checkWiner = (
     const isCheckBlock = checkBlock(board, arrWin, currentSquare, type);
     if (isCheckBlock) {
       console.log("Array-Win", arrWin);
-
-      return true;
+      return {
+        isWinner: true,
+        arrWin: arrWin,
+        typeWinner: type,
+      };
     } else {
       let b = 0;
       for (let i = currentIndex + 1; i < _.size(array); i++) {
@@ -388,12 +310,16 @@ const checkWiner = (
           array[i].value === currentSquare?.value &&
           array[i].y === currentSquare.y + b
         )
-          arrWin.push(array[i]);
+          arrWin.unshift(array[i]);
       }
       const isCheckBlockB = checkBlock(board, arrWin, currentSquare, type);
       if (isCheckBlockB) {
         console.log("Array-Win", arrWin);
-        return true;
+        return {
+          isWinner: true,
+          arrWin: arrWin,
+          typeWinner: type,
+        };
       }
     }
   } else if (type === "col") {
@@ -413,8 +339,11 @@ const checkWiner = (
     const isCheckBlock = checkBlock(board, arrWin, currentSquare, type);
     if (isCheckBlock) {
       console.log("Array-Win", arrWin);
-
-      return true;
+      return {
+        isWinner: true,
+        arrWin: arrWin,
+        typeWinner: type,
+      };
     } else {
       let b = 0;
       for (let i = currentIndex + 1; i < _.size(array); i++) {
@@ -426,12 +355,17 @@ const checkWiner = (
           array[i].value === currentSquare?.value &&
           array[i].x === currentSquare.x + b
         )
-          arrWin.push(array[i]);
+          arrWin.unshift(array[i]);
       }
       const isCheckBlockB = checkBlock(board, arrWin, currentSquare, type);
       if (isCheckBlockB) {
         console.log("Array-Win", arrWin);
-        return true;
+
+        return {
+          isWinner: true,
+          arrWin: arrWin,
+          typeWinner: type,
+        };
       }
     }
   } else if (type === "diagonRight") {
@@ -449,18 +383,22 @@ const checkWiner = (
         array[i].y === currentSquare.y - k
       )
         arrWin.unshift(array[i]);
-      console.log(arrWin);
     }
 
     const isCheckBlock = checkBlock(board, arrWin, currentSquare, type);
     if (isCheckBlock) {
       console.log("Array-Win", arrWin);
 
-      return true;
+      return {
+        isWinner: true,
+        arrWin: arrWin,
+        typeWinner: type,
+      };
     } else {
       let b = 0;
       for (let i = currentIndex + 1; i < _.size(array); i++) {
         b = b + 1;
+
         if (
           !_.isUndefined(array[i]) &&
           !_.isUndefined(currentSquare) &&
@@ -470,18 +408,24 @@ const checkWiner = (
           array[i].x === currentSquare.x + b &&
           array[i].y === currentSquare.y + b
         )
-          arrWin.push(array[i]);
+          arrWin.unshift(array[i]);
       }
       const isCheckBlockB = checkBlock(board, arrWin, currentSquare, type);
       if (isCheckBlockB) {
         console.log("Array-Win", arrWin);
-        return true;
+
+        return {
+          isWinner: true,
+          arrWin: arrWin,
+          typeWinner: type,
+        };
       }
     }
   } else if (type === "diagonLeft") {
     let k = -1;
     for (let i = currentIndex; i >= 0; i--) {
       k = k + 1;
+
       if (
         !_.isUndefined(array[i]) &&
         !_.isUndefined(currentSquare) &&
@@ -498,11 +442,16 @@ const checkWiner = (
     if (isCheckBlock) {
       console.log("Array-Win", arrWin);
 
-      return true;
+      return {
+        isWinner: true,
+        arrWin: arrWin,
+        typeWinner: type,
+      };
     } else {
       let b = 0;
       for (let i = currentIndex + 1; i < _.size(array); i++) {
         b = b + 1;
+
         if (
           !_.isUndefined(array[i]) &&
           !_.isUndefined(currentSquare) &&
@@ -512,12 +461,16 @@ const checkWiner = (
           array[i].x === currentSquare.x - b &&
           array[i].y === currentSquare.y + b
         )
-          arrWin.push(array[i]);
+          arrWin.unshift(array[i]);
       }
       const isCheckBlockB = checkBlock(board, arrWin, currentSquare, type);
       if (isCheckBlockB) {
         console.log("Array-Win", arrWin);
-        return true;
+        return {
+          isWinner: true,
+          arrWin: arrWin,
+          typeWinner: type,
+        };
       }
     }
   }

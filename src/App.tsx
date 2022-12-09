@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, KeyboardEvent } from "react";
 import { Provider, useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import _ from "lodash";
@@ -34,21 +34,22 @@ function App() {
     setBoardSize(tictactoe?.presentState?.boardSize);
   }, [tictactoe?.presentState?.boardSize]);
 
-  const checkWin = isWin(squares, currentSquare);
+  const { arrWin, isWinner, typeWinner }: any = isWin(squares, currentSquare);
 
   useEffect(() => {
-    !_.isUndefined(checkWin) && dispatch(winner({ checkWin }));
+    _.isBoolean(isWinner) &&
+      isWinner &&
+      dispatch(winner({ isWinner, arrWin, typeWinner }));
   }, [squares, currentSquare, playerToWin]);
-
+  console.log(typeWinner);
   useEffect(() => {
-    if (checkWin === true) {
+    if (isWinner === true) {
       setCurrentPlayer(`Winner: ${isStarted === true ? "X" : "O"}`);
     } else {
       setCurrentPlayer("Draw");
     }
-  }, [winner, checkWin]);
+  }, [winner, isWinner]);
 
-  console.log(checkWin);
   function getStatus() {
     if (playerToWin) {
       return currentPlayer;
@@ -56,16 +57,15 @@ function App() {
       return "Next player: " + isPlayer;
     }
   }
-  // console.log(checkWin);
-  const handleChangeBoard = (e?: any) => {
+
+  const handleChangeBoard = (e: KeyboardEvent) => {
     if (e.code === "Enter") {
       dispatch(changeBoard({ boardSize }));
     }
   };
 
   return (
-    <div className={st(classes.root)} data-hook="App">
-      <ActionBtn />
+    <div className={st(classes.root)} data-hook="app">
       <div className={st(classes.game)}>
         <div className={st(classes.setting)}>
           <p className={st(classes.chooseSize)}>Choose board size:</p>
@@ -77,6 +77,7 @@ function App() {
               setBoardSize({ ...boardSize, x: _.toNumber(e.target.value) })
             }
             onKeyDown={(e) => handleChangeBoard(e)}
+            data-hook="seclect-x"
           />
           Y:
           <input
@@ -86,9 +87,13 @@ function App() {
               setBoardSize({ ...boardSize, y: _.toNumber(e.target.value) })
             }
             onKeyDown={(e) => handleChangeBoard(e)}
+            data-hook="seclect-y"
           />
         </div>
-        <div className={st(classes.gameInfo)}>{getStatus()}</div>
+        <ActionBtn />
+        <div className={st(classes.gameInfo)} data-hook="status">
+          {getStatus()}
+        </div>
         <Board />
       </div>
     </div>

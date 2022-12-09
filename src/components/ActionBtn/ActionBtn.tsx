@@ -31,18 +31,27 @@ const Action = () => {
   };
 
   return (
-    <div className={st(classes.root)} data-hook="board">
-      <button className={st(classes.redo)} onClick={() => showBtn("REDO")}>
-        Redo
+    <div className={st(classes.root)} data-hook="action">
+      <button
+        className={st(classes.undo)}
+        onClick={() => showBtn("UNDO")}
+        data-hook="undo"
+      >
+        Undo
       </button>
 
-      <button className={st(classes.undo)} onClick={() => showBtn("UNDO")}>
-        Undo
+      <button
+        className={st(classes.redo)}
+        onClick={() => showBtn("REDO")}
+        data-hook="redo"
+      >
+        Redo
       </button>
 
       <button
         className={st(classes.restartBtn)}
         onClick={() => showBtn("RESTART")}
+        data-hook="restart"
       >
         Play again
       </button>

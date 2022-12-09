@@ -8,15 +8,20 @@ export type TicTacToe = {
       x: number;
       y: number;
       value: string | null;
-      // color?: {
-      //   backgroundWin: string;
-      // };
+      //color: { backgroundWin: string };
     }[];
     currentSquare?: { x: number; y: number; value: string | null };
     isStarted?: boolean;
     isPlayer?: string;
     boardSize?: { x?: number; y?: number };
     playerToWin: boolean;
+    arrayWin: {
+      x: number;
+      y: number;
+      value: string | null;
+      // color: { backgroundWin: string };
+    }[];
+    typeWin: string;
   };
 
   nextState?: [];
@@ -51,6 +56,8 @@ const initialData: TicTacToe = {
       y: 15,
     },
     playerToWin: false,
+    arrayWin: [],
+    typeWin: "",
   },
 
   nextState: [],
@@ -81,7 +88,7 @@ const squareSlice = createSlice<TicTacToe, Actions>({
               x: i,
               y: j,
               value: null,
-              // color: { backgroundWin: "" },
+              //color: { backgroundWin: "#333" },
             });
           }
           initBoard.push(temp);
@@ -105,6 +112,8 @@ const squareSlice = createSlice<TicTacToe, Actions>({
           y?: number;
         };
         playerToWin: boolean;
+        arrayWin: [];
+        typeWin: string;
       } = {
         isStarted: false,
         isPlayer: "X",
@@ -114,13 +123,20 @@ const squareSlice = createSlice<TicTacToe, Actions>({
           y: 15,
         },
         playerToWin: false,
+        arrayWin: [],
+        typeWin: "",
       };
 
       state.presentState = tempSquare;
     },
 
     changeBoard: (state, action) => {
-      const initBoard: { x: number; y: number; value: string | null }[] = [];
+      const initBoard: {
+        x: number;
+        y: number;
+        value: string | null;
+        // color: { backgroundWin: "#333" };
+      }[] = [];
       const { x, y } = action.payload.boardSize || { x: 15, y: 15 };
 
       if (x && y) {
@@ -131,7 +147,7 @@ const squareSlice = createSlice<TicTacToe, Actions>({
               x: i,
               y: j,
               value: null,
-              // color: { backgroundWin: "" },
+              // color: { backgroundWin: "#333" },
             });
           }
           initBoard.push(temp);
@@ -141,6 +157,7 @@ const squareSlice = createSlice<TicTacToe, Actions>({
       if (state.presentState?.boardSize && state.presentState.squares) {
         state.presentState.boardSize = action.payload.boardSize;
         state.presentState.squares = initBoard;
+        state.presentState = _.cloneDeep(state.presentState);
       }
     },
 
@@ -158,6 +175,8 @@ const squareSlice = createSlice<TicTacToe, Actions>({
           x?: number;
           y?: number;
         };
+        arrayWin: [];
+        typeWin: string;
       } = {
         isStarted: !state.presentState.isStarted,
         isPlayer: !state.presentState.isStarted === true ? "O" : "X",
@@ -170,6 +189,8 @@ const squareSlice = createSlice<TicTacToe, Actions>({
           x: 15,
           y: 15,
         },
+        arrayWin: [],
+        typeWin: "",
       };
 
       state.prevState.push(_.cloneDeep(state.presentState));
@@ -194,8 +215,10 @@ const squareSlice = createSlice<TicTacToe, Actions>({
     },
     winner: (state, action) => {
       let { presentState } = state;
-      const { checkWin } = action.payload;
-      presentState.playerToWin = checkWin;
+      const { arrWin, isWinner, typeWinner } = action.payload;
+      presentState.playerToWin = isWinner;
+      presentState.arrayWin = arrWin;
+      presentState.typeWin = typeWinner;
       presentState = _.cloneDeep(presentState);
     },
     reStart: (state) => {
@@ -205,6 +228,8 @@ const squareSlice = createSlice<TicTacToe, Actions>({
       state.nextState = [];
 
       presentState.playerToWin = false;
+      presentState.arrayWin = [];
+      presentState.typeWin = "";
       presentState = _.cloneDeep(presentState);
     },
   },

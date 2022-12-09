@@ -16,10 +16,19 @@ const Board = () => {
         _.map(
           presentState?.squares,
           (
-            squareX: { x: number; y: number; value: string | null }[],
+            squareX: {
+              x: number;
+              y: number;
+              value: string | null;
+              color: { backgroundWin: string };
+            }[],
             index
           ) => (
-            <div className={st(classes.squares)} key={index}>
+            <div
+              className={st(classes.squares)}
+              key={index}
+              data-hook="item-board"
+            >
               {_.map(squareX, (square, index) => (
                 <Square square={square} key={index} />
               ))}

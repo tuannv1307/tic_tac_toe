@@ -25,7 +25,7 @@ module.exports = {
   },
   plugins: [
     new StylableWebpackPlugin(),
-    new HtmlWebpackPlugin({ title: "Todo list" }),
+    new HtmlWebpackPlugin({ title: "Tic Tac Toe" }),
   ],
   cache: { type: "filesystem" },
   optimization: {

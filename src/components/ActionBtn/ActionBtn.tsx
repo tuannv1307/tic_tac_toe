@@ -4,11 +4,6 @@ import { redo, reStart, undo, init } from "../../store/tictactoeReducer";
 import { useDispatch } from "react-redux";
 import { st, classes } from "./ActionBtn.st.css";
 
-export type ActionProps = {
-  todos?: { id: string; name: string; completed: boolean }[];
-  lengthTodoList?: number;
-};
-
 const Action = () => {
   const dispatch = useDispatch();
   const showBtn = (type: string) => {

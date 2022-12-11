@@ -41,18 +41,18 @@ const Square = ({ square }: SquareProps) => {
       data-hook="square"
     >
       {square?.value}
-      {/* <span
+      <span
         className={st(`${!_.isEmpty(filterArr) ? classes.drawLine : ""}`, {
           typeWin,
         })}
-      ></span> */}
-      {!_.isEmpty(filterArr) && (
+      ></span>
+      {/* {!_.isEmpty(filterArr) && (
         <div className={st(classes.lineWin)}>
           <div className={st(classes.left)}></div>
           <div className={st(classes.center)}></div>
           <div className={st(classes.right)}></div>
         </div>
-      )}
+      )} */}
     </div>
   );
 };

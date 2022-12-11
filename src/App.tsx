@@ -41,7 +41,7 @@ function App() {
       isWinner &&
       dispatch(winner({ isWinner, arrWin, typeWinner }));
   }, [squares, currentSquare, playerToWin]);
-  console.log(typeWinner);
+
   useEffect(() => {
     if (isWinner === true) {
       setCurrentPlayer(`Winner: ${isStarted === true ? "X" : "O"}`);
@@ -59,7 +59,7 @@ function App() {
   }
 
   const handleChangeBoard = (e: KeyboardEvent) => {
-    if (e.code === "Enter") {
+    if (e.key === "Enter") {
       dispatch(changeBoard({ boardSize }));
     }
   };
@@ -69,7 +69,7 @@ function App() {
       <div className={st(classes.game)}>
         <div className={st(classes.setting)}>
           <p className={st(classes.chooseSize)}>Choose board size:</p>
-          X:
+          <h3>X: </h3>
           <input
             type="number"
             value={boardSize?.x}
@@ -78,8 +78,9 @@ function App() {
             }
             onKeyDown={(e) => handleChangeBoard(e)}
             data-hook="seclect-x"
+            className={st(classes.newValueSelect)}
           />
-          Y:
+          <h3>Y: </h3>
           <input
             type="number"
             value={boardSize?.y}
@@ -88,6 +89,7 @@ function App() {
             }
             onKeyDown={(e) => handleChangeBoard(e)}
             data-hook="seclect-y"
+            className={st(classes.newValueSelect)}
           />
         </div>
         <ActionBtn />

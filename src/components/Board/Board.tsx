@@ -20,7 +20,6 @@ const Board = () => {
               x: number;
               y: number;
               value: string | null;
-              color: { backgroundWin: string };
             }[],
             index
           ) => (

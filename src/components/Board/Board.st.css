@@ -2,18 +2,9 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+
 }
 
 .squares {
     display: flex;
 }
-
-/* 
-.lineWin {
-    width: 246px;
-    position: absolute;
-    border-bottom: 10px solid #ff3d00;
-    transform: rotate(135deg);
-    border-radius: 10px;
-    z-index: 100000;
-} */

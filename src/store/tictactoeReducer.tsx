@@ -39,7 +39,14 @@ export type Actions = {
   ) => void;
   redo: (state: any) => void;
   undo: (state: any) => void;
-  winner: (state: any, action: any) => void;
+  winner: (
+    state: any,
+    action: PayloadAction<{
+      arrWin?: [];
+      isWinner?: boolean;
+      typeWinner?: string;
+    }>
+  ) => void;
   reStart: (state: any) => void;
 };
 
@@ -88,7 +95,6 @@ const squareSlice = createSlice<TicTacToe, Actions>({
               x: i,
               y: j,
               value: null,
-              //color: { backgroundWin: "#333" },
             });
           }
           initBoard.push(temp);
@@ -99,14 +105,7 @@ const squareSlice = createSlice<TicTacToe, Actions>({
         isStarted?: boolean;
         isPlayer?: "O" | "X";
         squares?: any;
-        //  {
-        //   x: number;
-        //   y: number;
-        //   value: string | null;
-        //   // color: {
-        //   //   backgroundWin: string | "";
-        //   // };
-        // }[];
+
         boardSize?: {
           x?: number;
           y?: number;
@@ -135,7 +134,6 @@ const squareSlice = createSlice<TicTacToe, Actions>({
         x: number;
         y: number;
         value: string | null;
-        // color: { backgroundWin: "#333" };
       }[] = [];
       const { x, y } = action.payload.boardSize || { x: 15, y: 15 };
 
@@ -147,7 +145,6 @@ const squareSlice = createSlice<TicTacToe, Actions>({
               x: i,
               y: j,
               value: null,
-              // color: { backgroundWin: "#333" },
             });
           }
           initBoard.push(temp);
@@ -195,7 +192,6 @@ const squareSlice = createSlice<TicTacToe, Actions>({
 
       state.prevState.push(_.cloneDeep(state.presentState));
       state.presentState = _.cloneDeep(tempSquare);
-      // isWin(nextSquares);
     },
 
     redo: (state) => {
@@ -228,6 +224,10 @@ const squareSlice = createSlice<TicTacToe, Actions>({
       state.nextState = [];
 
       presentState.playerToWin = false;
+      presentState.boardSize = {
+        x: 15,
+        y: 15,
+      };
       presentState.arrayWin = [];
       presentState.typeWin = "";
       presentState = _.cloneDeep(presentState);

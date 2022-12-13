@@ -17,11 +17,11 @@ describe("App.cy.tsx", () => {
 
     cy.get('[data-hook="square"]')
       .eq(59)
-      .click({ multiple: true })
+
+      .click()
+      .and("have.text", "X")
       .prevAll()
       .click({ multiple: true });
-
-    // cy.get('[data-hook="square"]').eq(50).click();
   });
 
   it("click undo redo", () => {
@@ -101,11 +101,33 @@ describe("App.cy.tsx", () => {
     cy.get('[data-hook="restart"]').trigger("click");
   });
 
-  it("hover action", () => {
+  it("show action with click", () => {
     cy.viewport(1000, 1000);
 
     cy.mount(<App />);
 
-    cy.get('[data-hook="undo"]').should("be.visible").invoke("show");
+    cy.get('[data-hook="undo"] ').click();
+    cy.wait(2000);
+    cy.get('[data-hook="redo"]').click();
+    cy.wait(2000);
+    cy.get('[data-hook="restart"]').click();
+  });
+
+  it("show background action ", () => {
+    cy.viewport(1000, 1000);
+
+    cy.mount(<App />);
+
+    cy.get('[data-hook="undo"] ')
+      .should("have.css", "background-color", "rgb(36, 41, 47)")
+      .and("have.css", "color", "rgb(221, 221, 221)");
+
+    cy.get('[data-hook="redo"]')
+      .should("have.css", "background-color", "rgb(36, 41, 47)")
+      .and("have.css", "color", "rgb(221, 221, 221)");
+
+    cy.get('[data-hook="restart"]')
+      .should("have.css", "background-color", "rgb(36, 41, 47)")
+      .and("have.css", "color", "rgb(221, 221, 221)");
   });
 });

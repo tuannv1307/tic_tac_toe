@@ -1,6 +1,7 @@
 import Square from "./Square";
 import { Provider } from "react-redux";
 import store from "../../store/store";
+
 describe("Square.cy.tsx", () => {
   it("is true", () => {
     cy.viewport(1000, 1000);
@@ -29,12 +30,13 @@ describe("Square.cy.tsx", () => {
     });
   });
 
-  it("show mount square with click", () => {
+  it("show mount square with background ang color", () => {
     cy.viewport(1000, 1000);
-    //const handleClick;
-    let square1 = { x: 1, y: 0, value: null };
-    let square2 = { x: 2, y: 0, value: "O" };
-    let square3 = { x: 3, y: 0, value: null };
+
+    let square1 = { x: 0, y: 0, value: null };
+    let square2 = { x: 0, y: 1, value: "O" };
+    let square3 = { x: 0, y: 2, value: null };
+
     cy.mount(
       <Provider store={store}>
         <Square square={square1} />
@@ -42,6 +44,9 @@ describe("Square.cy.tsx", () => {
         <Square square={square3} />
       </Provider>
     );
-    cy.get('[data-hook="square"]').eq(0).click();
+    cy.get('[data-hook="square"]')
+      .eq(1)
+      .should("have.css", "background-color", "rgb(255, 255, 255)")
+      .and("have.css", "color", "rgb(66, 66, 66)");
   });
 });

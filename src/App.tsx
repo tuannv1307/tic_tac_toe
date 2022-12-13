@@ -69,7 +69,7 @@ function App() {
       <div className={st(classes.game)}>
         <div className={st(classes.setting)}>
           <p className={st(classes.chooseSize)}>Choose board size:</p>
-          <h3>X: </h3>
+          <h2>X: </h2>
           <input
             type="number"
             value={boardSize?.x}
@@ -80,7 +80,7 @@ function App() {
             data-hook="seclect-x"
             className={st(classes.newValueSelect)}
           />
-          <h3>Y: </h3>
+          <h2>Y: </h2>
           <input
             type="number"
             value={boardSize?.y}

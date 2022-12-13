@@ -1,27 +1,34 @@
 import { memo } from "react";
 import _ from "lodash";
 import { redo, reStart, undo, init } from "../../store/tictactoeReducer";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import type { TicTacToe } from "../../store/tictactoeReducer";
 import { st, classes } from "./ActionBtn.st.css";
 
 const Action = () => {
   const dispatch = useDispatch();
+
+  const presentState: TicTacToe["presentState"] = useSelector(
+    (state: { tictactoe: TicTacToe }) => state.tictactoe.presentState
+  );
+
+  const playerToWin = presentState?.playerToWin;
+
+  const disabled = playerToWin && playerToWin ? false : true;
+
   const showBtn = (type: string) => {
-    try {
-      switch (type) {
-        case "UNDO":
-          dispatch(undo());
-          break;
-        case "REDO":
-          dispatch(redo());
-          break;
-        default:
-          dispatch(init());
-          dispatch(reStart());
-          break;
-      }
-    } catch (error) {
-      console.log(error);
+    switch (type) {
+      case "UNDO":
+        disabled && dispatch(undo());
+        break;
+      case "REDO":
+        disabled && dispatch(redo());
+        break;
+      default:
+        dispatch(init());
+        dispatch(init());
+        dispatch(reStart());
+        break;
     }
   };
 

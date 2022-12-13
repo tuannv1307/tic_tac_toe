@@ -11,8 +11,21 @@ describe("ActionBtn.cy.tsx", () => {
       </Provider>
     );
   });
+  it("show mount with shound", () => {
+    cy.viewport(1000, 500);
+    cy.mount(
+      <Provider store={store}>
+        <ActionBtn />
+      </Provider>
+    );
+
+    cy.get('[data-hook="undo"]').contains("Undo");
+
+    cy.get('[data-hook="redo"]').contains("Redo");
+
+    cy.get('[data-hook="restart"]').contains("Play again");
+  });
   it("show mount with click button", () => {
-    const handleAction = cy.spy().as("handleSpy");
     cy.viewport(1000, 500);
     cy.mount(
       <Provider store={store}>
@@ -25,6 +38,5 @@ describe("ActionBtn.cy.tsx", () => {
     cy.get('[data-hook="redo"]').click();
     cy.wait(2000);
     cy.get('[data-hook="restart"]').click();
-    // cy.get('[data-hook="undo"]').should("have.calledOnceWith", "UNDO");
   });
 });

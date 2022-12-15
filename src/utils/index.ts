@@ -55,17 +55,16 @@ const checkBlock = (
       return false;
     } else if (_.size(arrWin) >= 5) {
       if (
-        (!_.isUndefined(board[arrWin[4].x - 1]) &&
-          !_.isUndefined(board[arrWin[0].x + 1]) &&
-          !_.isUndefined(board[arrWin[4].x - 1][arrWin[0].y]) &&
-          (board[arrWin[4].x - 1][arrWin[4].y].value === null ||
-            board[arrWin[4].x - 1][arrWin[4].y].value ===
-              currentSquare?.value)) ||
-        (!_.isUndefined(board[arrWin[0].x - 1]) &&
-          !_.isUndefined(board[arrWin[0].x + 1]) &&
+        (!_.isUndefined(board[arrWin[0].x + 1]) &&
           !_.isUndefined(board[arrWin[0].x + 1][arrWin[0].y]) &&
-          (board[arrWin[0].x + 1][arrWin[0].y].value === null ||
-            board[arrWin[0].x + 1][arrWin[0].y].value === currentSquare?.value))
+          (board[arrWin[0].x + 1][arrWin[0].y]?.value === null ||
+            board[arrWin[0].x + 1][arrWin[0].y]?.value !== undefined ||
+            board[arrWin[0].x + 1][arrWin[0].y].value ===
+              currentSquare?.value)) ||
+        (!_.isUndefined(board[arrWin[4].x - 1]) &&
+          !_.isUndefined(board[arrWin[4].x - 1][arrWin[0].y]) &&
+          (board[arrWin[4].x - 1][arrWin[0].y].value === null ||
+            board[arrWin[4].x - 1][arrWin[0].y].value === currentSquare?.value))
       ) {
         return true;
       }
@@ -305,7 +304,7 @@ export const checkWiner = (
       console.log("Array-Win", arrWin);
       return {
         isWinner: true,
-        arrWin: arrWin,
+        arrWin: arrWin.slice(0, 5),
         typeWinner: type,
       };
     } else {
@@ -344,6 +343,7 @@ export const checkWiner = (
         array[i].x === currentSquare.x - k
       )
         arrWin.push(array[i]);
+      console.log("🚀 ~ file: index.ts:356 ~ arrWin", arrWin);
     }
 
     const isCheckBlock = checkBlock(board, arrWin, currentSquare, type);
@@ -366,6 +366,7 @@ export const checkWiner = (
           array[i].x === currentSquare.x + b
         )
           arrWin.unshift(array[i]);
+        console.log("🚀 ~ file: index.ts:356 ~ arrWin", arrWin);
       }
       const isCheckBlockB = checkBlock(board, arrWin, currentSquare, type);
       if (isCheckBlockB) {

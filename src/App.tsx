@@ -60,7 +60,7 @@ function App() {
 
   const handleChangeBoard = (e: KeyboardEvent) => {
     if (e.key === "Enter") {
-      dispatch(changeBoard({ boardSize }));
+      dispatch(changeBoard({ sizeData }));
     }
   };
 
